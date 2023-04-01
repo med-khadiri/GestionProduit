@@ -1,0 +1,89 @@
+package ma.ofppt.istakh.clientapp
+
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.FrameLayout
+import android.widget.Toolbar
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import com.google.android.material.navigation.NavigationView
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var drawer:DrawerLayout
+    private lateinit var navigationView :NavigationView
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    private lateinit var toggle: ActionBarDrawerToggle
+    private  var saisieFragment :SaisieClientFragment ?=null
+    private var affchageFragment: AffichageClientFragment?=null
+    //private lateinit var frameLayout: FrameLayout
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        initialisationComposant()
+        setSupportActionBar(toolbar)
+        toggle= ActionBarDrawerToggle(this,drawer,toolbar,R.string.open_drawer,R.string.close_drawer)
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
+        navigationView.setNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.menuAjouter->
+                {
+
+                    if (saisieFragment==null)
+                    {
+                        saisieFragment= SaisieClientFragment()
+                        chargerFragment(saisieFragment)
+                    }
+                    else
+                    {
+                        chargerFragment(saisieFragment)
+                    }
+
+
+                }
+                R.id.menuAfficher->
+                {
+                    if (affchageFragment==null)
+                    {
+                        affchageFragment= AffichageClientFragment()
+                        chargerFragment(affchageFragment)
+                    }
+                    else
+                    {
+                        chargerFragment(affchageFragment)
+                    }
+
+                }
+
+
+            }
+            drawer.closeDrawer(GravityCompat.START)
+            return@setNavigationItemSelectedListener true
+        }
+
+
+    }
+
+    private fun chargerFragment(fragment: Fragment ?) =
+        this.supportFragmentManager.beginTransaction().replace(R.id.frameLayout,fragment!!).commit()
+
+
+
+    private fun initialisationComposant() {
+        drawer=findViewById(R.id.drawerLayout)
+        navigationView=findViewById(R.id.navigationView)
+        toolbar=findViewById(R.id.toolBar)
+       // frameLayout=findViewById(R.id.frameLayout)
+
+    }
+
+    override fun onBackPressed() {
+        if (this.drawer.isDrawerOpen(GravityCompat.START)) this.drawer.closeDrawer(GravityCompat.START)
+        else  //super.onBackPressed()
+        this.finish()
+    }
+
+
+}
